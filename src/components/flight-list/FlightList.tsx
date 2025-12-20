@@ -10,8 +10,7 @@ export const FlightList = () => {
 
 	const filteredFlights = useMemo(() => {
 		if (!fromCountry) return FLIGHTS;
-
-		return FLIGHTS.filter(flight => flight.from.country === fromCountry);
+		return FLIGHTS.filter((flight) => flight.from.country === fromCountry);
 	}, [fromCountry]);
 
 	return (
@@ -19,7 +18,7 @@ export const FlightList = () => {
 			<Filters fromCountry={fromCountry} setFromCountry={setFromCountry} />
 
 			<div className='space-y-4'>
-				{filteredFlights.map(flight => (
+				{filteredFlights.map((flight) => (
 					<FlightCard key={flight.id} flight={flight} />
 				))}
 			</div>
