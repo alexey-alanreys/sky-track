@@ -52,7 +52,7 @@ export const FlightCard = ({ flight }: Props) => {
 				</div>
 
 				<div className='flex items-center justify-between'>
-					<div className='space-y-0.5'>
+					<div className='w-50 space-y-0.5 text-left'>
 						<div>{flight.from.city}</div>
 						<div className='text-3xl font-semibold'>{flight.from.code}</div>
 					</div>
