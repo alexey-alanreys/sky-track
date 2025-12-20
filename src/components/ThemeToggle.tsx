@@ -1,5 +1,7 @@
 import { Moon, Sun } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
+
 import { useTheme } from '@/providers/theme/useTheme';
 
 export const ThemeToggle = () => {
@@ -7,12 +9,15 @@ export const ThemeToggle = () => {
 
 	return (
 		<>
-			<button
-				onClick={toggleTheme}
-				className='bg-card flex items-center justify-center rounded-full p-2 transition-colors hover:bg-neutral-700 sm:p-1'
+			<Button
+				onClick={() => {
+					toggleTheme();
+				}}
+				variant='secondary'
+				size='icon'
 			>
 				{theme === 'dark' ? <Moon size={23} /> : <Sun size={23} />}
-			</button>
+			</Button>
 		</>
 	);
 };

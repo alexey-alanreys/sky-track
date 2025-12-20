@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Heart } from '@/components/animate-ui/icons/heart';
+import { Button } from '@/components/ui/button';
 
 import { HeaderMenuItem } from './HeaderMenuItem';
 import { headerMenuData } from './header-menu.data';
@@ -11,7 +12,7 @@ export const Header = () => {
 	const location = useLocation();
 
 	return (
-		<div className='bg-card sm:px-mini-element absolute top-7 left-1/2 flex w-4/12 -translate-x-1/2 items-center justify-between rounded-xl p-2 px-5 sm:rounded-lg lg:relative lg:top-0 lg:mb-5 lg:w-full'>
+		<div className='bg-card sm:px-mini-element absolute top-7 left-1/2 flex w-1/3 -translate-x-1/2 items-center justify-between rounded-xl p-2 px-5 sm:rounded-lg lg:relative lg:top-0 lg:mb-5 lg:w-full'>
 			<div className='flex items-center gap-4 sm:gap-2'>
 				<img
 					src='/logo.svg'
@@ -33,15 +34,11 @@ export const Header = () => {
 			</div>
 
 			<div className='flex items-center gap-3 sm:gap-2'>
-				{/* TODO: Config */}
-				<button>
-					<Link
-						to='/favorites'
-						// className='bg-card flex items-center justify-center rounded-full p-2 transition-colors hover:bg-neutral-700 sm:p-1'
-					>
+				<Button asChild variant='secondary' size='icon'>
+					<Link to='/favorites'>
 						<Heart size={23} />
 					</Link>
-				</button>
+				</Button>
 				<ThemeToggle />
 			</div>
 		</div>

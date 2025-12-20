@@ -1,9 +1,10 @@
 import { useSearchParams } from 'react-router';
 
+import { cn } from '@/utils/cn';
+
 import type { IFlight } from '@/types/flight.types';
 
-import { cn } from '@/lib/utils';
-
+import { FlightCardActions } from './actions/FlightCardActions';
 import { QUERY_PARAM_FLIGHT } from './flights.constants';
 
 interface Props {
@@ -19,12 +20,13 @@ export const FlightCard = ({ flight }: Props) => {
 	return (
 		<div
 			className={cn(
-				'relative w-full rounded-lg p-0.5 transition-colors ease-in',
+				'group relative w-full rounded-lg p-0.5 transition-colors ease-in',
 				isActive
 					? 'bg-linear-to-r from-rose-500 to-orange-400'
 					: 'bg-transparent'
 			)}
 		>
+			<FlightCardActions flightId={flight.id} />
 			<button
 				className='block h-full w-full rounded-lg bg-neutral-900 p-5'
 				onClick={() =>
