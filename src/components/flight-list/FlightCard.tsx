@@ -23,7 +23,7 @@ export const FlightCard = ({ flight }: Props) => {
 		<div
 			// TODO: add this gradient to tailwind css variables
 			className={cn(
-				'group relative w-full rounded-lg p-0.5 transition-colors ease-in',
+				'group animate-fade-in relative w-full rounded-lg p-0.5 transition-colors ease-in',
 				isActive
 					? 'g-linear-to-r from-rose-500 to-orange-400'
 					: 'bg-transparent'
