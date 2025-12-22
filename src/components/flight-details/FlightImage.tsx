@@ -7,7 +7,7 @@ interface Props {
 export const FlightImage = ({ flight }: Props) => {
 	return (
 		<div
-			className='h-72 w-full pt-28'
+			className='xs:h-56 xs:pt-21 h-72 w-full pt-28'
 			style={{
 				background: `linear-gradient(to top, ${flight?.colorGradient[0]}, ${flight?.colorGradient[1]})`
 			}}

@@ -17,14 +17,14 @@ export const FlightDetails = () => {
 	const selectedFlight = searchParams.get(QUERY_PARAM_FLIGHT);
 
 	const flight = useMemo(
-		() => FLIGHTS.find(flight => flight.id === selectedFlight),
+		() => FLIGHTS.find((flight) => flight.id === selectedFlight),
 		[selectedFlight]
 	);
 
 	if (!flight) return null;
 
 	return (
-		<aside className='absolute top-1/2 right-7 w-sm -translate-y-1/2 overflow-hidden rounded-xl bg-[#101010]'>
+		<aside className='xs:rounded-lg xs:top-35 xs:inset-2.5 xs:w-[95%] absolute top-7 right-7 w-sm overflow-hidden rounded-xl bg-[#101010] sm:inset-3 sm:top-21 sm:w-[95.5%] md:top-28'>
 			<FlightHeader flight={flight} />
 			<FlightImage flight={flight} />
 

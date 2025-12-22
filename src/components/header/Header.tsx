@@ -12,17 +12,17 @@ export const Header = () => {
 	const location = useLocation();
 
 	return (
-		<div className='bg-card sm:px-mini-element absolute top-7 left-1/2 flex w-1/3 -translate-x-1/2 items-center justify-between rounded-xl p-2 px-5 sm:rounded-lg lg:relative lg:top-0 lg:mb-5 lg:w-full'>
-			<div className='flex items-center gap-4 sm:gap-2'>
+		// TODO: Adaptive hamburger menu
+		<div className='bg-card sm:px-mini-element xs:flex-col xs:pb-4 absolute top-7 left-1/2 flex w-4/12 -translate-x-1/2 items-center justify-between rounded-xl p-2 px-5 sm:rounded-lg lg:relative lg:top-0 lg:mb-5 lg:w-full'>
+			<div className='xs:flex-wrap xs:justify-center xs:mb-3 flex items-center gap-4 sm:gap-2'>
 				<img
 					src='/logo.svg'
 					alt='Sky Track Logo'
 					className='mt-1 h-12 w-12 sm:h-10 sm:w-10'
 				/>
-
 				<nav>
 					<ul className='flex items-center gap-5 sm:gap-3'>
-						{headerMenuData.map(item => (
+						{headerMenuData.map((item) => (
 							<HeaderMenuItem
 								key={item.href}
 								item={item}
@@ -32,11 +32,15 @@ export const Header = () => {
 					</ul>
 				</nav>
 			</div>
-
 			<div className='flex items-center gap-3 sm:gap-2'>
+				{/* TODO: Config */}
+				{/* TODO: Nowhere not working icon animation */}
 				<Button asChild variant='secondary' size='icon'>
-					<Link to='/favorites'>
-						<Heart size={23} />
+					<Link
+						to='/favorites'
+						// className='bg-card flex items-center justify-center rounded-full p-2 transition-colors hover:bg-neutral-700 sm:p-1'
+					>
+						<Heart animateOnHover size={23} />
 					</Link>
 				</Button>
 				<ThemeToggle />

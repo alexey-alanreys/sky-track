@@ -6,7 +6,7 @@ interface Props {
 
 export const FlightInformation = ({ flight }: Props) => {
 	return (
-		<div className='my-3.5'>
+		<div className='xs:text-sm my-3.5'>
 			<div className='px-mini-element py-mini-element mb-1 rounded-tl-xl rounded-tr-xl bg-[#282828] font-medium'>
 				Flight information
 			</div>
@@ -21,7 +21,7 @@ export const FlightInformation = ({ flight }: Props) => {
 							alt={flight?.airline.country}
 							width={24}
 							height={18}
-							className='mr-1 inline-block'
+							className='xs:w-5 xs:h-4 mr-1 inline-block'
 						/>
 						<span>{flight.airline.country}</span>
 					</div>

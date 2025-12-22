@@ -1,6 +1,6 @@
 export const FlightSchedule = () => {
 	return (
-		<div>
+		<div className='xs:text-sm'>
 			<div className='mb-1 grid grid-cols-2 gap-1'>
 				<div className='bg-card p-mini-element flex items-center justify-between'>
 					<p className='text-muted-foreground'>Scheduled</p>
