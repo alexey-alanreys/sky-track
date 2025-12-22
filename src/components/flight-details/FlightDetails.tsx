@@ -33,20 +33,21 @@ export const FlightDetails = () => {
 				exit={{ x: '100%', opacity: 0 }}
 				transition={{
 					type: 'tween',
-					duration: 0.4,
+					duration: 0.3,
 					ease: [0.3, 0.4, 0.45, 0.95]
 				}}
-				className='xs:rounded-lg xs:top-35 xs:inset-2.5 xs:w-[95%] absolute top-7 right-7 w-sm overflow-hidden rounded-xl bg-[#101010] sm:inset-3 sm:top-21 sm:w-[95.5%] md:top-28'
+				className='xs:rounded-lg xs:top-35 xs:inset-2.5 xs:w-[95%] bg-flight-card absolute top-7 right-7 w-sm overflow-hidden rounded-xl sm:inset-3 sm:top-21 sm:w-[95.5%] md:top-28'
 			>
 				<FlightHeader flight={flight} />
 				<FlightImage flight={flight} />
 
 				<div className='p-3.5'>
 					<FlightRoute flight={flight} />
-					<FlightStatus />
+					<FlightStatus progress={flight.progress} />
 					<FlightSchedule />
 
 					<FlightInformation flight={flight} />
+
 					<FlightActions
 						onRoute={() => {}}
 						onFollow={() => {}}

@@ -22,7 +22,6 @@ interface Props {
 	entityName?: string;
 }
 
-// TODO: Maybe add flag for country and logo for airline
 export const FilterSearchSelect = ({
 	data,
 	onChange,
