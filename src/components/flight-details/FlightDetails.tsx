@@ -1,3 +1,4 @@
+import { AnimatePresence, m } from 'motion/react';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router';
 
@@ -24,23 +25,36 @@ export const FlightDetails = () => {
 	if (!flight) return null;
 
 	return (
-		<aside className='xs:rounded-lg xs:top-35 xs:inset-2.5 xs:w-[95%] absolute top-7 right-7 w-sm overflow-hidden rounded-xl bg-[#101010] sm:inset-3 sm:top-21 sm:w-[95.5%] md:top-28'>
-			<FlightHeader flight={flight} />
-			<FlightImage flight={flight} />
+		<AnimatePresence mode='wait'>
+			<m.aside
+				key={flight.id}
+				initial={{ x: '100%', opacity: 0 }}
+				animate={{ x: 0, opacity: 1 }}
+				exit={{ x: '100%', opacity: 0 }}
+				transition={{
+					type: 'tween',
+					duration: 0.4,
+					ease: [0.3, 0.4, 0.45, 0.95]
+				}}
+				className='xs:rounded-lg xs:top-35 xs:inset-2.5 xs:w-[95%] absolute top-7 right-7 w-sm overflow-hidden rounded-xl bg-[#101010] sm:inset-3 sm:top-21 sm:w-[95.5%] md:top-28'
+			>
+				<FlightHeader flight={flight} />
+				<FlightImage flight={flight} />
 
-			<div className='p-3.5'>
-				<FlightRoute flight={flight} />
-				<FlightStatus />
-				<FlightSchedule />
+				<div className='p-3.5'>
+					<FlightRoute flight={flight} />
+					<FlightStatus />
+					<FlightSchedule />
 
-				<FlightInformation flight={flight} />
-				<FlightActions
-					onRoute={() => {}}
-					onFollow={() => {}}
-					onShare={() => {}}
-					onMore={() => {}}
-				/>
-			</div>
-		</aside>
+					<FlightInformation flight={flight} />
+					<FlightActions
+						onRoute={() => {}}
+						onFollow={() => {}}
+						onShare={() => {}}
+						onMore={() => {}}
+					/>
+				</div>
+			</m.aside>
+		</AnimatePresence>
 	);
 };

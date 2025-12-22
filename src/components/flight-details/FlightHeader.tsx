@@ -12,6 +12,11 @@ interface Props {
 export const FlightHeader = ({ flight }: Props) => {
 	const [searchParams, setSearchParams] = useSearchParams();
 
+	const handleClick = () => {
+		searchParams.delete(QUERY_PARAM_FLIGHT);
+		setSearchParams(searchParams);
+	};
+
 	return (
 		<div className='xs:rounded-lg absolute top-3.5 left-1/2 flex h-max w-11/12 -translate-x-1/2 items-center justify-between rounded-xl bg-[#1a1a1a] px-4 py-3'>
 			<div>
@@ -19,10 +24,7 @@ export const FlightHeader = ({ flight }: Props) => {
 				<p className='text-sm text-gray-300'>{flight.airline.name}</p>
 			</div>
 			<button
-				onClick={() => {
-					searchParams.delete(QUERY_PARAM_FLIGHT);
-					setSearchParams(searchParams);
-				}}
+				onClick={handleClick}
 				className='rounded-full bg-neutral-700 p-1 text-gray-400 transition-colors hover:text-white'
 			>
 				<X animateOnHover animateOnTap size={20} />

@@ -1,3 +1,4 @@
+import { LazyMotion, domAnimation } from 'motion/react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router';
@@ -17,16 +18,18 @@ createRoot(document.getElementById('root')!).render(
 	<StrictMode>
 		<ReduxProvider>
 			<ThemeProvider>
-				<BrowserRouter>
-					<Routes>
-						<Route element={<Layout />}>
-							<Route path='/' element={<Home />} />
-							<Route element={<CenterLayout />}>
-								<Route path='/favorites' element={<Favorites />} />
+				<LazyMotion features={domAnimation}>
+					<BrowserRouter>
+						<Routes>
+							<Route element={<Layout />}>
+								<Route path='/' element={<Home />} />
+								<Route element={<CenterLayout />}>
+									<Route path='/favorites' element={<Favorites />} />
+								</Route>
 							</Route>
-						</Route>
-					</Routes>
-				</BrowserRouter>
+						</Routes>
+					</BrowserRouter>
+				</LazyMotion>
 			</ThemeProvider>
 		</ReduxProvider>
 	</StrictMode>

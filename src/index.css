@@ -61,6 +61,7 @@ body {
 	color: #fff;
 	font-family: 'JetBrains Mono', monospace;
 	font-optical-sizing: auto;
+	overflow-x: hidden;
 }
 
 @theme {
