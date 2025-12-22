@@ -12,13 +12,7 @@ export const FlightList = () => {
 	const [currentAirline, setCurrentAirline] = useState<string | undefined>();
 
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			setIsLoading(false);
-		}, 1500);
-
-		return () => {
-			clearTimeout(timer);
-		};
+		setIsLoading(false);
 	}, []);
 
 	const filteredFlights = useMemo(() => {
@@ -36,7 +30,7 @@ export const FlightList = () => {
 	}, [currentAirline, fromCountry]);
 
 	return (
-		<div className='w-sm sm:w-full md:w-xs'>
+		<div className='relative z-10 w-sm sm:w-full md:w-xs'>
 			<Filters
 				fromCountry={fromCountry}
 				setFromCountry={setFromCountry}

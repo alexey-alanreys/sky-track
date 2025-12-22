@@ -1,9 +1,6 @@
 import { AnimatePresence, m } from 'motion/react';
-import { useMemo } from 'react';
-import { useSearchParams } from 'react-router';
 
-import { QUERY_PARAM_FLIGHT } from '@/components/flight-list/flights.constants';
-import { FLIGHTS } from '@/components/flight-list/flights.data';
+import { useCurrentFlight } from '@/hooks/useCurrentFlight';
 
 import { FlightActions } from './FlightActions';
 import { FlightHeader } from './FlightHeader';
@@ -14,14 +11,7 @@ import { FlightSchedule } from './FlightSchedule';
 import { FlightStatus } from './FlightStatus';
 
 export const FlightDetails = () => {
-	const [searchParams] = useSearchParams();
-	const selectedFlight = searchParams.get(QUERY_PARAM_FLIGHT);
-
-	const flight = useMemo(
-		() => FLIGHTS.find((flight) => flight.id === selectedFlight),
-		[selectedFlight]
-	);
-
+	const { flight } = useCurrentFlight();
 	if (!flight) return null;
 
 	return (
@@ -36,7 +26,7 @@ export const FlightDetails = () => {
 					duration: 0.3,
 					ease: [0.3, 0.4, 0.45, 0.95]
 				}}
-				className='xs:rounded-lg xs:top-35 xs:inset-2.5 xs:w-[95%] bg-flight-card absolute top-7 right-7 w-sm overflow-hidden rounded-xl sm:inset-3 sm:top-21 sm:w-[95.5%] md:top-28'
+				className='xs:rounded-lg xs:top-35 xs:inset-2.5 xs:w-[95%] bg-flight-card absolute top-7 right-7 z-10 w-sm overflow-hidden rounded-xl sm:inset-3 sm:top-21 sm:w-[95.5%] md:top-28'
 			>
 				<FlightHeader flight={flight} />
 				<FlightImage flight={flight} />
