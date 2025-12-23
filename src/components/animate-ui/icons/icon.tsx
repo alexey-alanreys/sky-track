@@ -290,7 +290,7 @@ function AnimateIcon({
 			}
 
 			isAnimateInProgressRef.current = true;
-			animateEndPromiseRef.current = new Promise<void>(resolve => {
+			animateEndPromiseRef.current = new Promise<void>((resolve) => {
 				resolveAnimateEndRef.current = resolve;
 			});
 
@@ -329,7 +329,7 @@ function AnimateIcon({
 
 			if (loop) {
 				if (loopDelay > 0) {
-					await new Promise<void>(resolve => {
+					await new Promise<void>((resolve) => {
 						loopDelayRef.current = setTimeout(() => {
 							loopDelayRef.current = null;
 							resolve();
@@ -646,6 +646,7 @@ function getVariants<
 	return result;
 }
 
+/* eslint-disable react-refresh/only-export-components */
 export {
 	pathClassName,
 	staticAnimations,

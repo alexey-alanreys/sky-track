@@ -131,6 +131,24 @@ html {
 	@apply text-base md:text-[0.92rem];
 }
 
+.custom-scrollbar {
+	scrollbar-width: thin;
+	scrollbar-color: var(--sidebar) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+	width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background-color: var(--sidebar);
+	border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+	background: transparent;
+}
+
 body {
 	margin: 0;
 	min-width: 320px;

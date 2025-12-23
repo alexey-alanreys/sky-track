@@ -1,7 +1,6 @@
 'use client';
 
 import { type Variants, motion } from 'motion/react';
-import * as React from 'react';
 
 import {
 	type IconProps,
@@ -107,6 +106,7 @@ function MapPin(props: MapPinProps) {
 	return <IconWrapper icon={IconComponent} {...props} />;
 }
 
+/* eslint-disable react-refresh/only-export-components */
 export {
 	animations,
 	MapPin,

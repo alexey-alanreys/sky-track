@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"lib": ["ESNext"],
+
+		"moduleResolution": "node16",
+		"types": ["node"],
+
+		"strict": true,
+		"noEmit": true,
+		"skipLibCheck": true,
+
+		"verbatimModuleSyntax": true,
+		"noFallthroughCasesInSwitch": true
+	}
+}
