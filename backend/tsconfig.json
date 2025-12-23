@@ -1,11 +1,15 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"module": "ESNext",
-		"lib": ["ESNext"],
 
-		"moduleResolution": "node16",
+		"module": "Node16",
+		"moduleResolution": "Node16",
+
+		"lib": ["ESNext"],
 		"types": ["node"],
+
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
 
 		"strict": true,
 		"noEmit": true,
