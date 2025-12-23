@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import type { TRouterOutput } from 'backend/src/trpc';
+import { useState } from 'react';
 
 import { RefreshCw } from '@/components/animate-ui/icons/refresh-cw';
 import { SkeletonLoader } from '@/components/custom-ui/SkeletonLoader';
@@ -8,46 +8,24 @@ import { Button } from '@/components/ui/button';
 
 import { FlightCard } from './FlightCard';
 import { formatDate } from './format-date';
-import aviationService from '@/services/external/aviation/aviation.service';
 
 interface Props {
-	setIcao24: (icao24: string[]) => void;
+	flights: TRouterOutput['flights']['getLive'];
+	refetch: () => void;
+	isRefetching: boolean;
+	isPending: boolean;
+	lastUpdate: Date | null;
 }
 
-export const FlightList = ({ setIcao24 }: Props) => {
-	const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+export const FlightList = ({
+	flights,
+	isRefetching,
+	isPending,
+	lastUpdate,
+	refetch
+}: Props) => {
 	const [fromCountry, setFromCountry] = useState<string | undefined>();
 	const [currentAirline, setCurrentAirline] = useState<string | undefined>();
-
-	const { data, isPending, refetch, isRefetching } = {
-		data: undefined,
-		isPending: true,
-		refetch: () => null,
-		isRefetching: false
-	};
-
-	// const { data, isPending, refetch, isRefetching } = useQuery({
-	// 	queryKey: ['flights', fromCountry, currentAirline],
-	// 	queryFn: async () => {
-	// 		const result = await aviationService.fetchFlights({
-	// 			airline: currentAirline,
-	// 			fromCountry,
-	// 			limit: 100
-	// 		})
-
-	// 		setLastUpdate(new Date())
-	// 		return result
-	// 	}
-	// })
-
-	useEffect(() => {
-		if (!data?.data?.length) return;
-
-		const icao24List = data.data
-			.map((flight) => flight.flight.icao)
-			.filter(Boolean);
-		setIcao24(icao24List);
-	}, [data, setIcao24]);
 
 	return (
 		<div className='relative z-10 w-sm sm:w-full md:w-xs'>
@@ -82,9 +60,9 @@ export const FlightList = ({ setIcao24 }: Props) => {
 				{isPending ? (
 					<SkeletonLoader count={5} className='mb-4 h-40' />
 				) : (
-					!!data?.data.length &&
-					data.data.map((flight) => (
-						<FlightCard key={flight.flight.number} flight={flight} />
+					!!flights?.length &&
+					flights.map((flight) => (
+						<FlightCard key={flight.id} flight={flight} />
 					))
 				)}
 			</div>
