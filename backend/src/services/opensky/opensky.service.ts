@@ -1,116 +1,181 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 
-import {
-	type IOpenSkyResponse,
-	type IOpenSkyTokenResponse,
-} from './opensky.types.js';
-
 dotenv.config();
 
-class OpenSkyService {
+// Маппинг ICAO -> IATA кодов
+const ICAO_TO_IATA_MAP: Record<string, string> = {
+	AAL: 'AA', // American Airlines
+	UAL: 'UA', // United Airlines
+	DAL: 'DL', // Delta
+	JAL: 'JL', // Japan Airlines
+	ANA: 'NH', // All Nippon Airways
+	BAW: 'BA', // British Airways
+	DLH: 'LH', // Lufthansa
+	AFR: 'AF', // Air France
+	KLM: 'KL', // KLM
+	FDX: 'FX', // FedEx
+	UPS: '5X', // UPS
+	SWA: 'WN', // Southwest
+	JBU: 'B6', // JetBlue
+	ASA: 'AS', // Alaska Airlines
+	UAE: 'EK', // Emirates
+	QTR: 'QR', // Qatar Airways
+	SIA: 'SQ', // Singapore Airlines
+	THY: 'TK', // Turkish Airlines
+	CPA: 'CX', // Cathay Pacific
+	AFL: 'SU', // Aeroflot
+	RYR: 'FR', // Ryanair
+	EZY: 'U2', // easyJet
+	IBE: 'IB', // Iberia
+	QFA: 'QF', // Qantas
+	ANZ: 'NZ', // Air New Zealand
+};
+
+interface ICallsignValidation {
+	callsign: string;
+	found: boolean;
+	data?: any;
+	error?: string;
+}
+
+class AviationService {
 	private apiUrl: string;
-	private apiTokenUrl: string;
-	private token: string | null = null;
-	private tokenExpiresAt: number = 0;
+	private apiKey: string;
+	private requestCache: Map<string, any> = new Map();
 
 	constructor() {
-		this.apiUrl = 'https://opensky-network.org/api';
-		this.apiTokenUrl =
-			'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token';
+		this.apiUrl =
+			process.env.AVIATION_API_URL || 'https://api.aviationstack.com/v1';
+		this.apiKey = process.env.AVIATION_API_KEY!;
 	}
 
-	private async getToken() {
-		if (this.token && Date.now() < this.tokenExpiresAt) {
-			return this.token;
-		}
-
-		console.log('Fetching new token from OpenSky API');
-
+	async validateCallsign(callsign: string): Promise<ICallsignValidation> {
 		try {
-			const params = new URLSearchParams({
-				grant_type: 'client_credentials',
-				client_id: process.env.OPENSKY_CLIENT_ID!,
-				client_secret: process.env.OPENSKY_CLIENT_SECRET!,
+			// Проверяем кэш
+			if (this.requestCache.has(callsign)) {
+				const cached = this.requestCache.get(callsign);
+				return {
+					callsign,
+					found: !!cached,
+					data: cached,
+				};
+			}
+
+			console.log(`🔍 Проверяем ${callsign} в Aviation Stack...`);
+
+			// Извлекаем префикс и номер
+			let prefix = '';
+			let flightNumber = '';
+
+			const match = callsign.match(/^([A-Z]+)(\d+)$/);
+			if (match) {
+				prefix = match[1];
+				flightNumber = match[2];
+			}
+
+			// Пробуем разные варианты поиска
+			const searchVariants = [];
+
+			// 1. Оригинальный callsign
+			searchVariants.push({
+				params: { flight_icao: callsign },
+				type: 'ICAO original',
 			});
 
-			const response = await axios.post<IOpenSkyTokenResponse>(
-				this.apiTokenUrl,
-				params,
-				{
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
-				},
-			);
+			// 2. Если есть маппинг ICAO->IATA
+			if (prefix && ICAO_TO_IATA_MAP[prefix]) {
+				const iataVersion = ICAO_TO_IATA_MAP[prefix] + flightNumber;
+				searchVariants.push({
+					params: { flight_iata: iataVersion },
+					type: `IATA converted (${iataVersion})`,
+				});
+			}
 
-			this.token = response.data.access_token;
-			// Refresh until 5 minutes before expiry
-			this.tokenExpiresAt =
-				Date.now() + (response.data.expires_in - 300) * 1000;
+			// 3. Для 2-буквенных кодов
+			if (prefix.length === 2 && flightNumber) {
+				searchVariants.push({
+					params: { flight_iata: callsign },
+					type: 'IATA format',
+				});
+			}
 
-			console.log('Token successfully fetched from OpenSky API');
+			// Пробуем все варианты
+			for (const variant of searchVariants) {
+				try {
+					const response = await axios.get(`${this.apiUrl}/flights`, {
+						params: {
+							access_key: this.apiKey,
+							...variant.params,
+							limit: 1,
+						},
+					});
 
-			return this.token;
-		} catch (err) {
-			console.error('Error fetching token from OpenSky API', err);
+					if (response.data?.data?.length > 0) {
+						const flight = response.data.data[0];
+						this.requestCache.set(callsign, flight);
+						console.log(`✅ ${callsign} найден через ${variant.type}`);
+						return {
+							callsign,
+							found: true,
+							data: flight,
+						};
+					}
+				} catch (err) {
+					continue;
+				}
+			}
+
+			// Не нашли
+			this.requestCache.set(callsign, null);
+			console.log(`❌ ${callsign} НЕ найден`);
+			return {
+				callsign,
+				found: false,
+			};
+		} catch (err: any) {
+			console.error(`❌ Ошибка проверки ${callsign}:`, err.message);
+			return {
+				callsign,
+				found: false,
+				error: err.message,
+			};
 		}
 	}
 
-	async fetchLiveFlights() {
-		try {
-			const token = await this.getToken();
+	// Проверяем несколько callsign
+	async validateMultipleCallsigns(
+		callsigns: string[],
+	): Promise<ICallsignValidation[]> {
+		console.log(`📋 Проверяем ${callsigns.length} callsigns...`);
 
-			console.log('Fetching live flights from OpenSky API');
+		const results: ICallsignValidation[] = [];
 
-			const response = await axios.get<IOpenSkyResponse>(
-				`${this.apiUrl}/states/all`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			);
+		for (const callsign of callsigns) {
+			const result = await this.validateCallsign(callsign);
+			results.push(result);
 
-			console.log('Live flights successfully fetched from OpenSky API');
-
-			return response.data;
-		} catch (err) {
-			console.error('Error fetching live flights from OpenSky API', err);
-			return { time: 0, states: [] };
+			// Небольшая задержка чтобы не перегрузить API
+			await new Promise((resolve) => setTimeout(resolve, 500));
 		}
+
+		const found = results.filter((r) => r.found).length;
+		console.log(`📊 Найдено: ${found}/${callsigns.length}`);
+
+		return results;
 	}
 
-	async fetchFlightByIcao(icao24: string) {
-		try {
-			const token = await this.getToken();
+	// Получаем полет по ICAO
+	async getFlightByIcao(flightIcao: string) {
+		const validation = await this.validateCallsign(flightIcao);
+		return validation.data || null;
+	}
 
-			console.log(
-				`Fetching flight details for ICAO24: ${icao24} from OpenSky API`,
-			);
-			const response = await axios.get<IOpenSkyResponse>(
-				`${this.apiUrl}/tracks/all`,
-				{
-					params: { icao24, time: 0 },
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			);
-
-			console.log(
-				`Flight details for ICAO24: ${icao24} successfully fetched from OpenSky API`,
-			);
-
-			return response.data;
-		} catch (err) {
-			console.error(
-				`Error fetching flight details for ICAO24: ${icao24} from OpenSky API`,
-				err,
-			);
-			return { time: 0, states: [] };
-		}
+	// Получаем только верифицированные полеты
+	async getVerifiedFlights(callsigns: string[]) {
+		const validations = await this.validateMultipleCallsigns(callsigns);
+		return validations.filter((v) => v.found && v.data).map((v) => v.data);
 	}
 }
 
-export default new OpenSkyService();
+export default new AviationService();

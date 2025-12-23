@@ -1,10 +1,7 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 
-import type {
-	IFetchAllByMultipleIcaoParams,
-	IFetchFlightsResponse,
-} from './aviation.types.js';
+import type { IFetchFlightsResponse } from './aviation.types.js';
 
 dotenv.config();
 
@@ -23,12 +20,11 @@ class AviationService {
 		return url;
 	}
 
-	private async fetchFlights(flightIcao?: string) {
+	async fetchLiveFlights(limit = 15) {
 		const url = this.getFlightsUrl;
-
-		if (flightIcao) {
-			url.searchParams.append('flight_icao', flightIcao);
-		}
+		url.searchParams.set('limit', limit.toString());
+		// TEST
+		url.searchParams.set('flight_status', 'active');
 
 		try {
 			console.log('Fetching flights from AviationStack API');
@@ -44,56 +40,6 @@ class AviationService {
 		} catch (err) {
 			console.error('Error fetching flights from AviationStack API', err);
 		}
-	}
-
-	async fetchAllByMultipleIcao({
-		flightIcaos,
-		airline,
-		fromCountry,
-		limit,
-		offset,
-	}: IFetchAllByMultipleIcaoParams) {
-		const all = (await this.fetchFlights()) || { data: [] };
-		let filtered = all.data.filter((flight) =>
-			flightIcaos.includes(flight.flight.icao),
-		);
-
-		if (flightIcaos?.length) {
-			filtered = filtered.filter((flight) =>
-				flightIcaos.includes(flight.flight.icao),
-			);
-		}
-
-		if (airline) {
-			filtered = filtered.filter(
-				(flight) =>
-					flight.airline?.icao?.toLowerCase() === airline.toLowerCase(),
-			);
-		}
-
-		if (fromCountry) {
-			filtered = filtered.filter((flight) =>
-				flight.departure?.airport
-					?.toLowerCase()
-					.includes(fromCountry.toLowerCase()),
-			);
-		}
-
-		if (typeof offset === 'number' || typeof limit === 'number') {
-			const start = offset ?? 0;
-			const end = limit ? start + limit : undefined;
-			filtered = filtered.slice(start, end);
-		}
-
-		return filtered;
-	}
-
-	async fetchFlightByIcao(flightIcao: string) {
-		const data = (await this.fetchFlights(flightIcao)) || { data: [] };
-		if (data.data.length === 0) {
-			throw new Error(`Flight with ICAO ${flightIcao} not found`);
-		}
-		return data.data[0];
 	}
 }
 

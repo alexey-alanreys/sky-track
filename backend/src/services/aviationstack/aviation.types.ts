@@ -67,7 +67,7 @@ export interface ILive {
 	is_ground: boolean;
 }
 
-export interface IFlightData {
+export interface IAviationStackData {
 	flight_date: string;
 	flight_status: string;
 	departure: IAirportInfo;
@@ -80,5 +80,5 @@ export interface IFlightData {
 
 export interface IFetchFlightsResponse {
 	pagination: IPagination;
-	data: IFlightData[];
+	data: IAviationStackData[];
 }
