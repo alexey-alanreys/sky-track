@@ -1,10 +1,10 @@
 import { useSearchParams } from 'react-router';
 
-// import { ProgressBar } from '@/components/custom-ui/ProgressBar';
-
 import { cn } from '@/utils/cn';
 
 import type { TFlight } from '@/lib/trpc';
+
+import { ProgressBar } from '../custom-ui/ProgressBar';
 
 import { FlightCardActions } from './actions/FlightCardActions';
 import { QUERY_PARAM_FLIGHT } from './flights.constants';
@@ -24,7 +24,7 @@ export const FlightCard = ({ flight }: Props) => {
 			className={cn(
 				'group animate-fadeIn relative w-full rounded-lg p-0.5 shadow-xl transition-colors ease-in',
 				isActive
-					? 'bg-linear-to-r from-rose-500 to-orange-400'
+					? 'bg-gradient-to-r from-rose-500 to-orange-400'
 					: 'bg-flight-card'
 			)}
 		>
@@ -39,13 +39,15 @@ export const FlightCard = ({ flight }: Props) => {
 			>
 				<div className='mb-7 flex items-center justify-between'>
 					<div className='flex items-center gap-3'>
-						<img
-							src={flight.assets.logo}
-							alt={flight.airline.name}
-							width={40}
-							height={40}
-							className='rounded-full bg-white'
-						/>
+						<div className='flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full'>
+							<img
+								src={flight.assets.logo}
+								alt={flight.airline.name}
+								width={40}
+								height={40}
+								className='bg-white'
+							/>
+						</div>
 						<span>{flight.id}</span>
 					</div>
 					<div>
@@ -60,7 +62,7 @@ export const FlightCard = ({ flight }: Props) => {
 					</div>
 
 					<div className='mb-4'>
-						{/* <ProgressBar percentage={flight.progress} /> */}
+						<ProgressBar percentage={flight.progress} />
 					</div>
 
 					<div>

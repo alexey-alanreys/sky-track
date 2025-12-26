@@ -6,10 +6,8 @@ export interface IFetchFlightsParams {
 	flightIcao?: string | null;
 }
 
-export interface IFetchAllByMultipleIcaoParams extends Omit<
-	IFetchFlightsParams,
-	'flightIcao'
-> {
+export interface IFetchAllByMultipleIcaoParams
+	extends Omit<IFetchFlightsParams, 'flightIcao'> {
 	flightIcaos: string[];
 }
 

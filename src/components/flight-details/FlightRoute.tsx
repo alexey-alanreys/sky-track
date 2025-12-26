@@ -1,12 +1,10 @@
 import { Plane } from 'lucide-react';
 
-import type { IFlight } from '@/types/flight.types';
+import type { TFlight } from '@/lib/trpc';
 
-interface Props {
-	flight: IFlight;
-}
+import { getUtcOffsetFromTimezone } from './getAirportUtc';
 
-export const FlightRoute = ({ flight }: Props) => {
+export const FlightRoute = ({ flight }: { flight: TFlight }) => {
 	return (
 		<div className='relative mb-1 grid grid-cols-2 gap-1'>
 			<div className='bg-card p-element xs:p-4 rounded-tl-xl text-center'>
@@ -17,7 +15,7 @@ export const FlightRoute = ({ flight }: Props) => {
 					{flight.from.city}
 				</p>
 				<p className='xs:text-xs text-foreground/60 text-sm font-medium'>
-					{flight.from.timezone}
+					{getUtcOffsetFromTimezone(flight.from.timezone)}
 				</p>
 			</div>
 
@@ -33,7 +31,7 @@ export const FlightRoute = ({ flight }: Props) => {
 					{flight.to.city}
 				</p>
 				<p className='xs:text-xs text-foreground/60 text-sm font-medium'>
-					{flight.to.timezone}
+					{getUtcOffsetFromTimezone(flight.to.timezone)}
 				</p>
 			</div>
 		</div>

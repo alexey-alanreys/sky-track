@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
 
-import { appRouter } from './trpc/server.js';
+import { appRouter } from './trpc/index.js';
 
 dotenv.config();
 

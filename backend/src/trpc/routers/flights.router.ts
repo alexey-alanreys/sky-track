@@ -14,8 +14,12 @@ export const flightsRouter = router({
 				.optional(),
 		)
 		.query(async ({ input }) => {
-			const data = await aviationService.fetchLiveFlights(input?.limit);
-			const newData = data?.data.map(mapAviationToFlight);
+			const data = await aviationService.fetchLiveFlights(
+				input?.limit ?? 0 + 3,
+			);
+			const newData = data?.data
+				.filter((f) => !!f.flight.iata)
+				.map(mapAviationToFlight);
 			return newData;
 		}),
 });

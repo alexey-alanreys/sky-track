@@ -3,10 +3,10 @@ import { useSearchParams } from 'react-router';
 import { X } from '@/components/animate-ui/icons/x';
 import { QUERY_PARAM_FLIGHT } from '@/components/flight-list/flights.constants';
 
-import type { IFlight } from '@/types/flight.types';
+import type { TFlight } from '@/lib/trpc';
 
 interface Props {
-	flight: IFlight;
+	flight: TFlight;
 }
 
 export const FlightHeader = ({ flight }: Props) => {

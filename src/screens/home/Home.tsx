@@ -1,23 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router';
 
-// import { FlightDetails } from '@/components/flight-details/FlightDetails';
+import { FlightDetails } from '@/components/flight-details/FlightDetails';
 import { FlightList } from '@/components/flight-list/FlightList';
 
 import { trpc } from '@/lib/trpc';
 
 export const Home = () => {
+	const lastUpdateRef = useRef<Date>(new Date());
+
 	const { data, isLoading, error, refetch, isRefetching } =
 		trpc.flights.getLive.useQuery({
 			limit: 10
 		});
 
-	const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-
 	useEffect(() => {
 		if (data && data.length > 0) {
-			// eslint-disable-next-line react-hooks/set-state-in-effect
-			setLastUpdate(new Date());
+			lastUpdateRef.current = new Date();
 		}
 	}, [data]);
 
@@ -46,12 +45,12 @@ export const Home = () => {
 		<div>
 			<FlightList
 				flights={data}
-				lastUpdate={lastUpdate}
+				lastUpdate={lastUpdateRef.current}
 				isRefetching={isRefetching}
 				isPending={isLoading}
 				refetch={refetch}
 			/>
-			{/* {activeFlight && <FlightDetails flight={activeFlight} />} */}
+			{activeFlight && <FlightDetails flight={activeFlight} />}
 		</div>
 	);
 };
