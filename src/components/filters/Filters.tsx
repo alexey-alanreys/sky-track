@@ -1,11 +1,4 @@
-import { FLIGHTS } from '@/components/flight-list/flights.data';
-
 import { FilterSearchSelect } from './FilterSearchSelect';
-
-const fromCountries = [
-	...new Set(FLIGHTS.map((flight) => flight.from.country))
-];
-const airlines = [...new Set(FLIGHTS.map((flight) => flight.airline.country))];
 
 interface Props {
 	fromCountry: string | undefined;
@@ -13,27 +6,37 @@ interface Props {
 
 	currentAirline: string | undefined;
 	setCurrentAirline: (airline: string | undefined) => void;
+
+	countries: string[];
+	isLoading: boolean;
+
+	airlines: string[];
 }
 
 export const Filters = ({
 	fromCountry,
 	setFromCountry,
 	currentAirline,
-	setCurrentAirline
+	setCurrentAirline,
+	countries,
+	isLoading,
+	airlines
 }: Props) => {
 	return (
 		<div className='ml-1 grid grid-cols-2 gap-3'>
 			<FilterSearchSelect
-				data={fromCountries}
+				data={countries}
 				entityName='country'
 				value={fromCountry}
 				onChange={setFromCountry}
+				isLoading={isLoading}
 			/>
 			<FilterSearchSelect
 				data={airlines}
 				entityName='airline'
 				value={currentAirline}
 				onChange={setCurrentAirline}
+				isLoading={isLoading}
 			/>
 		</div>
 	);

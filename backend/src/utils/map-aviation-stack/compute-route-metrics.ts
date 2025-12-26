@@ -1,4 +1,4 @@
-import type { ICoordinate } from '../../types/types.js';
+import type { ICoordinate } from '../../types/types';
 
 const EARTH_RADIUS_KM = 6371;
 

@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
 
-import { appRouter } from './trpc/index.js';
+import { appRouter } from './trpc';
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5174;
 app.use(morgan('dev'));
 app.use(
 	cors({
-		origin: 'http://localhost:5173',
+		origin: ['http://localhost:5173', 'http://localhost:4173'],
 		credentials: true,
 	}),
 );
@@ -25,6 +25,9 @@ app.use(
 	trpcExpress.createExpressMiddleware({
 		router: appRouter,
 		createContext: () => ({}),
+		onError({ error, path }) {
+			console.error(`❌ tRPC error on ${path}:`, error);
+		},
 	}),
 );
 

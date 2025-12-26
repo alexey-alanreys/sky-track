@@ -45,8 +45,7 @@ class AviationService {
 	private requestCache: Map<string, any> = new Map();
 
 	constructor() {
-		this.apiUrl =
-			process.env.AVIATION_API_URL || 'https://api.aviationstack.com/v1';
+		this.apiUrl = 'https://api.aviationstack.com/v1';
 		this.apiKey = process.env.AVIATION_API_KEY!;
 	}
 

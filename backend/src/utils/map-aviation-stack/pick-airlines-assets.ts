@@ -1,4 +1,4 @@
-import { AIRLINE_ASSETS } from '../../data/airline-assets.data.js';
+import { AIRLINE_ASSETS } from '../../data/airline-assets.data';
 
 export function pickAirlinesAssets(name: string) {
 	const assets = AIRLINE_ASSETS.find((a) => a.name === name);

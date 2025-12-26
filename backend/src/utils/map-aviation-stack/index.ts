@@ -1,23 +1,37 @@
-import { getAirportAdditionalDataByIcao } from '../../data/airports/get-airport-coordinates-by-icao.js';
-import type { IAviationStackData } from '../../services/aviationstack/aviation.types.js';
-import type { IFlight } from '../../types/flight.types.js';
-import { interpolateCoordinates } from '../geo.util.js';
-import { calculateProgress } from '../progress.util.js';
+import countries from 'i18n-iso-countries';
+import enLocale from 'i18n-iso-countries/langs/en.json';
 
-import { computeRouteMetrics } from './compute-route-metrics.js';
-import { correctCity } from './correct-city.js';
-import { getFlightSchedule } from './get-flight-schedule.js';
-import { normalizeFlightStatus } from './normalize-flight-status.js';
-import { pickAirlinesAssets } from './pick-airlines-assets.js';
+import { getAirportAdditionalDataByIcao } from '../../data/airports/get-airport-coordinates-by-icao';
+import type { IAviationStackData } from '../../services/aviationstack/aviation.types';
+import type { IFlight } from '../../types/flight.types';
+import { interpolateCoordinates } from '../geo.util';
+import { calculateProgress } from '../progress.util';
 
-export function mapAviationToFlight(flight: IAviationStackData): IFlight {
-	const departure = getAirportAdditionalDataByIcao(flight.departure?.icao);
-	const arrival = getAirportAdditionalDataByIcao(flight.arrival?.icao);
+import { computeRouteMetrics } from './compute-route-metrics';
+import { correctCity } from './correct-city';
+import { generateFakeProgress } from './generate-fake-progress';
+import { getFlightSchedule } from './get-flight-schedule';
+import { normalizeFlightStatus } from './normalize-flight-status';
+import { pickAirlinesAssets } from './pick-airlines-assets';
 
-	const progress =
+countries.registerLocale(enLocale);
+
+export function mapAviationToFlight(
+	flight: IAviationStackData,
+): IFlight | null {
+	const departure = getAirportAdditionalDataByIcao(flight.departure.icao);
+	const arrival = getAirportAdditionalDataByIcao(flight.arrival.icao);
+
+	if (!departure || !arrival) {
+		return null;
+	}
+
+	let progress =
 		flight.departure.scheduled && flight.arrival.scheduled
 			? calculateProgress(flight.departure.scheduled, flight.arrival.scheduled)
 			: 0;
+
+	progress = generateFakeProgress(flight, progress);
 
 	const current =
 		departure?.coords && arrival?.coords
@@ -59,6 +73,7 @@ export function mapAviationToFlight(flight: IAviationStackData): IFlight {
 			city: correctCity(departure?.city),
 			country: departure?.country ?? null,
 			countryCode: flight.departure?.iata ?? null,
+			countryName: countries.getName(departure.country, 'en'),
 			timezone: flight.departure?.timezone ?? null,
 			code: flight.departure?.icao ?? null,
 			coordinates: departure?.coords ?? null,
@@ -67,6 +82,7 @@ export function mapAviationToFlight(flight: IAviationStackData): IFlight {
 			city: correctCity(arrival?.city),
 			country: arrival?.country ?? null,
 			countryCode: flight.arrival?.iata ?? null,
+			countryName: countries.getName(arrival.country, 'en'),
 			timezone: flight.arrival?.timezone ?? null,
 			code: flight.arrival?.icao ?? null,
 			coordinates: arrival?.coords ?? null,

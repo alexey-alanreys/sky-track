@@ -8,6 +8,7 @@ export const AIRLINE_ASSETS = [
 		countryFlag: '🇹🇷',
 		country: 'Turkey',
 	},
+
 	{
 		name: 'Ryanair',
 		logo: '/logos/ryanair.svg',

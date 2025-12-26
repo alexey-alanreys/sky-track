@@ -1,10 +1,14 @@
 import type { inferRouterOutputs } from '@trpc/server';
 
-import { flightsRouter } from './routers/flights.router.js';
-import { router } from './trpc.js';
+import { airlinesRouter } from './routers/airlines.router';
+import { countriesRouter } from './routers/countries.router';
+import { flightsRouter } from './routers/flights.router';
+import { router } from './trpc';
 
 export const appRouter = router({
 	flights: flightsRouter,
+	countries: countriesRouter,
+	airlines: airlinesRouter,
 });
 
 export type TAppRouter = typeof appRouter;

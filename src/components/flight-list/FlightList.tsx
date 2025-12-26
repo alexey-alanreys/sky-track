@@ -1,10 +1,10 @@
 import type { TRouterOutput } from 'backend/src/trpc';
-import { useState } from 'react';
+import { useMemo } from 'react';
 
-import { RefreshCw } from '@/components/animate-ui/icons/refresh-cw';
-import { SkeletonLoader } from '@/components/custom-ui/SkeletonLoader';
-import { Filters } from '@/components/filters/Filters';
-import { Button } from '@/components/ui/button';
+import { RefreshCw } from '../animate-ui/icons/refresh-cw';
+import { SkeletonLoader } from '../custom-ui/SkeletonLoader';
+import { Filters } from '../filters/Filters';
+import { Button } from '../ui/button';
 
 import { FlightCard } from './FlightCard';
 import { formatDate } from './format-date';
@@ -15,6 +15,12 @@ interface Props {
 	isRefetching: boolean;
 	isPending: boolean;
 	lastUpdate: Date | null;
+
+	currentAirline: string | undefined;
+	setCurrentAirline: (airline: string | undefined) => void;
+
+	fromCountry: string | undefined;
+	setFromCountry: (country: string | undefined) => void;
 }
 
 export const FlightList = ({
@@ -22,10 +28,33 @@ export const FlightList = ({
 	isRefetching,
 	isPending,
 	lastUpdate,
-	refetch
+	refetch,
+	currentAirline,
+	setCurrentAirline,
+	fromCountry,
+	setFromCountry
 }: Props) => {
-	const [fromCountry, setFromCountry] = useState<string | undefined>();
-	const [currentAirline, setCurrentAirline] = useState<string | undefined>();
+	const selectCountries: string[] = useMemo(
+		() =>
+			Array.from(
+				new Set(
+					flights
+						.map((f) => f?.from.countryName)
+						.filter((f): f is string => !!f)
+				)
+			),
+		[flights]
+	);
+
+	const selectAirlines: string[] = useMemo(
+		() =>
+			Array.from(
+				new Set(
+					flights.map((f) => f?.airline.name).filter((f): f is string => !!f)
+				)
+			),
+		[flights]
+	);
 
 	return (
 		<div className='relative z-10 w-sm sm:w-full md:w-xs'>
@@ -34,6 +63,9 @@ export const FlightList = ({
 				setFromCountry={setFromCountry}
 				currentAirline={currentAirline}
 				setCurrentAirline={setCurrentAirline}
+				isLoading={isPending}
+				countries={selectCountries}
+				airlines={selectAirlines}
 			/>
 
 			<div className='absolute top-0 -right-12.5'>
@@ -56,13 +88,13 @@ export const FlightList = ({
 				</div>
 			)}
 
-			<div className='custom-scrollbar max-h-[calc(100vh-4rem)] min-h-[calc(100vh-4rem)] space-y-4 overflow-x-hidden overflow-y-auto pt-3 pr-2 pb-8'>
+			<div className='custom-scrollbar max-h-[calc(100vh-4rem)] min-h-[calc(100vh-4rem)] space-y-4 overflow-x-hidden overflow-y-auto pt-3 pb-8'>
 				{isPending ? (
 					<SkeletonLoader count={5} className='mb-4 h-40' />
 				) : (
 					!!flights?.length &&
 					flights.map((flight) => (
-						<FlightCard key={flight.id} flight={flight} />
+						<FlightCard key={flight?.id} flight={flight} />
 					))
 				)}
 			</div>

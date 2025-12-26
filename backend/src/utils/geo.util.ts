@@ -1,4 +1,4 @@
-import type { ICoordinate } from '../types/types.js';
+import type { ICoordinate } from '../types/types';
 
 export function interpolateCoordinates(
 	from: ICoordinate,
