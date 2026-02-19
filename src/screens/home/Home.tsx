@@ -8,7 +8,7 @@ import { SkyTrackMap } from '@/components/map/SkyTrackMap';
 import { trpc } from '@/lib/trpc';
 
 export const Home = () => {
-	const lastUpdateRef = useRef<Date | null>(new Date());
+	const lastUpdateRef = useRef<Date>(new Date());
 
 	const [currentAirline, setCurrentAirline] = useState<string | undefined>();
 	const [fromCountry, setFromCountry] = useState<string | undefined>();

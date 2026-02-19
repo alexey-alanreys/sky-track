@@ -3,6 +3,8 @@ import { Dot, Plane } from 'lucide-react';
 import { useEffect, useMemo, useRef } from 'react';
 import Map, { Layer, type MapRef, Marker, Source } from 'react-map-gl/maplibre';
 
+import { useAppSelector } from '@/hooks/useAppSelector';
+
 import type { TFlight } from '@/lib/trpc';
 
 import { useTheme } from '@/providers/theme/useTheme';
@@ -118,6 +120,10 @@ export const SkyTrackMap = ({ flights, activeFlight }: Props) => {
 
 	const { theme } = useTheme();
 
+	const isShowRoute = useAppSelector(
+		(state) => state.flightActions.isShowRoute
+	);
+
 	return (
 		<Map
 			ref={ref}
@@ -133,7 +139,7 @@ export const SkyTrackMap = ({ flights, activeFlight }: Props) => {
 					: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'
 			}
 		>
-			{solidCoords.length > 1 && solidFeature && (
+			{solidCoords.length > 1 && solidFeature && isShowRoute && (
 				<Source
 					id='route-solid'
 					type='geojson'
@@ -146,7 +152,7 @@ export const SkyTrackMap = ({ flights, activeFlight }: Props) => {
 				</Source>
 			)}
 
-			{dashedCoords.length > 1 && dashedFeature && (
+			{dashedCoords.length > 1 && dashedFeature && isShowRoute && (
 				<Source
 					id='route-dashed'
 					type='geojson'

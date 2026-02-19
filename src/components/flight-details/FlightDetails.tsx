@@ -41,9 +41,8 @@ export const FlightDetails = ({ flight }: Props) => {
 					<FlightInformation flight={flight} />
 
 					<FlightActions
-						onRoute={() => {}}
+						flight={flight}
 						onFollow={() => {}}
-						onShare={() => {}}
 						onMore={() => {}}
 					/>
 				</div>
