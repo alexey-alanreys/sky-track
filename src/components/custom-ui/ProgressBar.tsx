@@ -4,11 +4,11 @@ interface Props {
 	percentage: number;
 }
 
-export const ProgressBar = ({ percentage }: Props) => {
+export function ProgressBar({ percentage }: Props) {
 	return (
 		<div className='h-1 w-full rounded-full bg-neutral-200/50 dark:bg-neutral-800'>
 			<div
-				className='relative h-full rounded-full bg-linear-to-r from-rose-500 to-orange-400 opacity-80 transition-all duration-500 ease-in-out'
+				className='relative h-full rounded-full bg-gradient-to-r from-rose-500 to-orange-400 opacity-80 transition-all duration-500 ease-in-out'
 				style={{ width: `${percentage}%` }}
 			>
 				<Plane
@@ -19,4 +19,4 @@ export const ProgressBar = ({ percentage }: Props) => {
 			</div>
 		</div>
 	);
-};
+}

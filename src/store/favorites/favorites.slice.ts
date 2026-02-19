@@ -1,33 +1,43 @@
-import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-import { loadFavorites } from './favorites.storage';
+const LS_KEY = 'favorites';
 
-interface IFavoritesState {
-	items: string[];
-}
-
-const initialState: IFavoritesState = {
-	items: loadFavorites()
+const getFavoritesFromLocalStorage = () => {
+	const favorites = localStorage.getItem(LS_KEY);
+	if (!favorites) return [];
+	try {
+		return JSON.parse(favorites);
+	} catch (error) {
+		console.error('Error parsing favorites from localStorage:', error);
+		return [];
+	}
 };
 
+const saveFavoritesToLocalStorage = (favorites: string[]) => {
+	localStorage.setItem(LS_KEY, JSON.stringify(favorites));
+};
+
+const initialState: string[] = getFavoritesFromLocalStorage();
+
 const favoritesSlice = createSlice({
-	name: 'favorites',
+	name: LS_KEY,
 	initialState,
 	reducers: {
-		addFavorite(state, action: PayloadAction<string>) {
-			if (!state.items.includes(action.payload)) {
-				state.items.push(action.payload);
+		addFavorite: (state, action) => {
+			if (!state.includes(action.payload)) {
+				state.push(action.payload);
+				saveFavoritesToLocalStorage(state);
 			}
 		},
-		removeFavorite(state, action: PayloadAction<string>) {
-			state.items = state.items.filter((id) => id !== action.payload);
-		},
-		clearFavorites(state) {
-			state.items = [];
+		removeFavorite: (state, action) => {
+			const index = state.indexOf(action.payload);
+			if (index !== -1) {
+				state.splice(index, 1);
+				saveFavoritesToLocalStorage(state);
+			}
 		}
 	}
 });
 
-export const { addFavorite, removeFavorite, clearFavorites } =
-	favoritesSlice.actions;
+export const { addFavorite, removeFavorite } = favoritesSlice.actions;
 export const favoritesReducer = favoritesSlice.reducer;

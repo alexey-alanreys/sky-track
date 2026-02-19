@@ -9,6 +9,7 @@
 		"dev": "concurrently -n FRONT,BACK -c blue,green \"bun run dev:front\" \"bun run dev:back\"",
 		"build": "tsc -b && vite build",
 		"lint": "eslint .",
+		"format": "prettier --write .",
 		"preview": "vite preview",
 		"test": "vitest",
 		"test:run": "vitest run",

@@ -4,10 +4,14 @@ interface Props {
 	flight: TFlight;
 }
 
-export const FlightImage = ({ flight }: Props) => {
+export function FlightImage({ flight }: Props) {
+	if (!flight) {
+		return null;
+	}
+
 	return (
 		<div
-			className='xs:h-56 xs:pt-21 h-72 w-full pt-24'
+			className='xs:h-56 xs:pt-17 h-72 w-full pt-24'
 			style={{
 				background: `linear-gradient(to top, ${flight.assets.gradient[0]}, ${flight.assets.gradient[1]})`
 			}}
@@ -19,4 +23,4 @@ export const FlightImage = ({ flight }: Props) => {
 			/>
 		</div>
 	);
-};
+}

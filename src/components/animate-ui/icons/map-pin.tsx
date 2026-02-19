@@ -106,11 +106,10 @@ function MapPin(props: MapPinProps) {
 	return <IconWrapper icon={IconComponent} {...props} />;
 }
 
-/* eslint-disable react-refresh/only-export-components */
 export {
 	animations,
 	MapPin,
 	MapPin as MapPinIcon,
-	type MapPinProps,
-	type MapPinProps as MapPinIconProps
+	type MapPinProps as MapPinIconProps,
+	type MapPinProps
 };

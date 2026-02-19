@@ -92,11 +92,10 @@ function SquareArrowOutUpRight(props: SquareArrowOutUpRightProps) {
 	return <IconWrapper icon={IconComponent} {...props} />;
 }
 
-/* eslint-disable react-refresh/only-export-components */
 export {
 	animations,
 	SquareArrowOutUpRight,
 	SquareArrowOutUpRight as SquareArrowOutUpRightIcon,
-	type SquareArrowOutUpRightProps,
-	type SquareArrowOutUpRightProps as SquareArrowOutUpRightIconProps
+	type SquareArrowOutUpRightProps as SquareArrowOutUpRightIconProps,
+	type SquareArrowOutUpRightProps
 };

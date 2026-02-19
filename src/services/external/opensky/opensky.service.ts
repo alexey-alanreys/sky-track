@@ -1,5 +1,7 @@
+/* eslint-disable no-useless-catch */
 import axios from 'axios';
 
+import { ACCESS_TOKEN } from './opensky.token';
 import { type IOpenSkyResponse } from './opensky.types';
 
 class OpenSkyService {
@@ -12,7 +14,12 @@ class OpenSkyService {
 	async fetchLiveFlights() {
 		try {
 			const response = await axios.get<IOpenSkyResponse>(
-				`${this.apiUrl}/states/all`
+				`${this.apiUrl}/states/all`,
+				{
+					headers: {
+						Authorization: `Bearer ${ACCESS_TOKEN}`
+					}
+				}
 			);
 
 			if (response.status !== 200 || !response.data.states) {

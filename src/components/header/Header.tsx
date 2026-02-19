@@ -1,19 +1,20 @@
 import { match } from 'path-to-regexp';
 import { Link, useLocation } from 'react-router';
 
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { Heart } from '@/components/animate-ui/icons/heart';
-import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '../ThemeToggle';
+import { Heart } from '../animate-ui/icons/heart';
+import { Button } from '../ui/button';
 
 import { HeaderMenuItem } from './HeaderMenuItem';
 import { headerMenuData } from './header-menu.data';
+import { PAGES } from '@/config/pages.config';
 
-export const Header = () => {
+export function Header() {
 	const location = useLocation();
 
 	return (
-		<div className='bg-card sm:px-mini-element xs:flex-col xs:pb-4 absolute top-7 left-1/2 z-10 flex w-4/12 -translate-x-1/2 items-center justify-between rounded-xl p-2 px-5 sm:rounded-lg lg:relative lg:top-0 lg:mb-5 lg:w-full'>
-			<div className='xs:flex-wrap xs:justify-center xs:mb-3 flex items-center gap-4 sm:gap-2'>
+		<div className='xs:hidden bg-card sm:px-mini-element xs:flex-col xs:pb-4 absolute top-7 left-1/2 z-10 flex w-4/12 -translate-x-1/2 items-center justify-between rounded-xl p-2 px-5 sm:rounded-lg xl:relative xl:top-0 xl:mb-5 xl:w-full'>
+			<div className='xs:flex-wrap xs:justify-center xs:mb-3 flex items-center gap-4 sm:gap-2 2xl:gap-3'>
 				<img
 					src='/logo.svg'
 					alt='Sky Track Logo'
@@ -33,7 +34,7 @@ export const Header = () => {
 			</div>
 			<div className='flex items-center gap-3 sm:gap-2'>
 				<Button asChild variant='secondary' size='icon'>
-					<Link to='/favorites'>
+					<Link to={PAGES.FAVORITES}>
 						<Heart animateOnHover size={23} />
 					</Link>
 				</Button>
@@ -41,4 +42,4 @@ export const Header = () => {
 			</div>
 		</div>
 	);
-};
+}

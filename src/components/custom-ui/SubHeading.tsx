@@ -1,5 +1,9 @@
-import type { PropsWithChildren } from 'react';
+import type { ReactNode } from 'react';
 
-export const SubHeading = ({ children }: PropsWithChildren) => {
+interface Props {
+	children: ReactNode;
+}
+
+export function SubHeading({ children }: Props) {
 	return <div className='text-foreground mb-6 opacity-70'>{children}</div>;
-};
+}

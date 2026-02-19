@@ -1,28 +1,32 @@
-import { Moon, Sun } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-
 import { useTheme } from '@/providers/theme/useTheme';
 
-export const ThemeToggle = () => {
+import { ThemeToggleIcon } from './ThemeToggleIcon';
+import { Button } from './ui/button';
+
+export function ThemeToggle({ isMobile }: { isMobile?: boolean }) {
 	const { theme, toggleTheme } = useTheme();
 
 	return (
 		<>
-			<Button
-				onClick={() => {
-					toggleTheme();
-				}}
-				variant='secondary'
-				size='icon'
-			>
-				{theme === 'dark' ? (
-					<Moon size={23} data-testid='lucide-moon' />
-				) : (
-					<Sun size={23} data-testid='lucide-sun' />
-				)}
-				{/* </button> */}
-			</Button>
+			{isMobile ? (
+				<button
+					onClick={() => {
+						toggleTheme();
+					}}
+				>
+					<ThemeToggleIcon theme={theme} isMobile={isMobile} />
+				</button>
+			) : (
+				<Button
+					onClick={() => {
+						toggleTheme();
+					}}
+					variant={'secondary'}
+					size='icon'
+				>
+					<ThemeToggleIcon theme={theme} isMobile={isMobile} />
+				</Button>
+			)}
 		</>
 	);
-};
+}

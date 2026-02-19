@@ -117,5 +117,4 @@ function X(props: XProps) {
 	return <IconWrapper icon={IconComponent} {...props} />;
 }
 
-/* eslint-disable react-refresh/only-export-components */
-export { animations, X, X as XIcon, type XProps, type XProps as XIconProps };
+export { animations, X, X as XIcon, type XProps as XIconProps, type XProps };

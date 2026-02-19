@@ -4,10 +4,10 @@ import { toast } from 'sonner';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 
-import { cn } from '@/utils/cn';
 import { formatICSDate } from '@/utils/format-ics-date.util';
 
 import type { TFlight } from '@/lib/trpc';
+import { cn } from '@/lib/utils';
 
 import {
 	toggleFlightRoute,
@@ -22,7 +22,7 @@ interface Props {
 	flight: NonNullable<TFlight>;
 }
 
-export const FlightActions = ({ flight }: Props) => {
+export function FlightActions({ flight }: Props) {
 	const dispatch = useAppDispatch();
 
 	const isShowRoute = useAppSelector(
@@ -146,4 +146,4 @@ END:VCALENDAR
 			</div>
 		</div>
 	);
-};
+}

@@ -1,8 +1,8 @@
-import { type PropsWithChildren, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 import { ThemeContext, type ThemeType } from './theme.context';
 
-export const ThemeProvider = ({ children }: PropsWithChildren) => {
+export function ThemeProvider({ children }: { children: ReactNode }) {
 	const [theme, setTheme] = useState<ThemeType>(() => {
 		const savedTheme = localStorage.getItem('theme');
 		return (savedTheme as ThemeType) || 'dark';
@@ -14,7 +14,7 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
 	}, [theme]);
 
 	const toggleTheme = () => {
-		setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+		setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
 	};
 
 	return (
@@ -22,4 +22,4 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
 			{children}
 		</ThemeContext.Provider>
 	);
-};
+}

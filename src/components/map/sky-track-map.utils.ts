@@ -14,8 +14,17 @@ export const solidStyle = (theme: ThemeType): LayerProps => ({
 	layout: { 'line-cap': 'round', 'line-join': 'round' },
 	paint: {
 		'line-color': theme === 'dark' ? '#73433F' : '#E8B4B0',
-		'line-width': 4,
-		'line-opacity': 1
+		'line-width': 3,
+		'line-opacity': 1,
+		'line-gradient': [
+			'interpolate',
+			['linear'],
+			['line-progress'],
+			0,
+			'#f43f5e',
+			1,
+			'#fb923c'
+		]
 	}
 });
 
@@ -36,7 +45,6 @@ export const createSplitGreatCircle = (
 	to: [number, number],
 	current: [number, number]
 ) => {
-	console.log('from, to, current', from, to, current);
 	const fullLine = greatCircle(point(from), point(to), { npoints: 128 });
 	const coords = fullLine.geometry.coordinates;
 
@@ -53,6 +61,7 @@ export const createSplitGreatCircle = (
 	];
 	const prevCoord = coords[Math.max(index - 1, 0)] as [number, number];
 
+	// Смещение назад по линии
 	const BACK_SHIFT_RATIO = 0.47;
 	const offsetPoint: [number, number] = [
 		snappedCoord[0] * (1 - BACK_SHIFT_RATIO) + prevCoord[0] * BACK_SHIFT_RATIO,

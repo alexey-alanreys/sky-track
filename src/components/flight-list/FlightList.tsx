@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { ArrowDownFromLine, ArrowUpFromLine } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import type { TInfiniteQueryResponseFlight } from '@/types/flight.types';
@@ -29,7 +30,7 @@ interface Props {
 	isFetchingNextPage: boolean;
 }
 
-export const FlightList = ({
+export function FlightList({
 	flights,
 	isRefetching,
 	isPending,
@@ -42,7 +43,7 @@ export const FlightList = ({
 	fetchNextPage,
 	hasNextPage,
 	isFetchingNextPage
-}: Props) => {
+}: Props) {
 	const { ref: loadMoreRef, inView } = useInView({ rootMargin: '100px' });
 	const lastFetchRef = useRef(0);
 
@@ -79,8 +80,10 @@ export const FlightList = ({
 		[flights]
 	);
 
+	const [isShowList, setIsShowList] = useState(true);
+
 	return (
-		<div className='relative z-10 w-sm sm:w-full md:w-xs'>
+		<div className='xs:w-full relative z-10 w-sm md:w-[26rem]'>
 			<Filters
 				fromCountry={fromCountry}
 				setFromCountry={setFromCountry}
@@ -91,13 +94,22 @@ export const FlightList = ({
 				airlines={selectAirlines}
 			/>
 
-			<div className='absolute top-0 -right-12.5'>
+			<div className='xs:right-0 xs:space-y-2 absolute top-0 -right-12.5'>
 				<Button
 					onClick={() => refetch()}
 					disabled={isRefetching}
 					variant='secondary'
+					className='xs:size-8 xs:mt-0.5'
 				>
-					<RefreshCw animateOnHover />
+					<RefreshCw animateOnHover animateOnTap />
+				</Button>
+
+				<Button
+					onClick={() => setIsShowList(!isShowList)}
+					variant='secondary'
+					className='xs:size-8 xs:flex hidden items-center justify-center'
+				>
+					{isShowList ? <ArrowUpFromLine /> : <ArrowDownFromLine />}
 				</Button>
 			</div>
 
@@ -111,22 +123,25 @@ export const FlightList = ({
 				</div>
 			)}
 
-			<div className='max-h-[calc(100vh-4rem)] min-h-[calc(100vh-4rem)] space-y-4 overflow-x-hidden overflow-y-auto pt-3 pb-8'>
-				{isPending ? (
-					<SkeletonLoader count={5} className='mb-4 h-40' />
-				) : (
-					!!flights?.length &&
-					flights.map((flight, index) => (
-						<FlightCard key={flight?.id} flight={flight} index={index} />
-					))
-				)}
+			{isShowList && (
+				<div className='xs:overflow-y-auto max-h-[calc(100vh-4rem)] min-h-[calc(100vh-4rem)] space-y-4 pt-3 pb-8'>
+					{/* TODO: For demo add overflow-y-auto */}
+					{isPending ? (
+						<SkeletonLoader count={5} className='mb-4 h-40' />
+					) : (
+						!!flights?.length &&
+						flights.map((flight, index) => (
+							<FlightCard key={flight?.id} flight={flight} index={index} />
+						))
+					)}
 
-				{isFetchingNextPage && (
-					<SkeletonLoader count={5} className='mb-4 h-40' />
-				)}
+					{isFetchingNextPage && (
+						<SkeletonLoader count={5} className='mb-4 h-40' />
+					)}
 
-				<div ref={loadMoreRef} />
-			</div>
+					<div ref={loadMoreRef} />
+				</div>
+			)}
 		</div>
 	);
-};
+}

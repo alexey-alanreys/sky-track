@@ -9,6 +9,11 @@
 		"paths": {
 			"@/*": ["./src/*"]
 		},
-		"types": ["vitest/globals", "@testing-library/jest-dom"]
+		"types": [
+			"vitest/globals",
+			"@testing-library/jest-dom",
+			"@testing-library/user-event",
+			"cypress"
+		]
 	}
 }

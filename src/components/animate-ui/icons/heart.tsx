@@ -85,6 +85,6 @@ export {
 	animations,
 	Heart,
 	Heart as HeartIcon,
-	type HeartProps,
-	type HeartProps as HeartIconProps
+	type HeartProps as HeartIconProps,
+	type HeartProps
 };

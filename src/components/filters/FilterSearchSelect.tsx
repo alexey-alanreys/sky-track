@@ -1,7 +1,7 @@
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react';
 import { useState } from 'react';
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 import { Button } from '../ui/button';
 import {
@@ -22,23 +22,23 @@ interface Props {
 	isLoading?: boolean;
 }
 
-export const FilterSearchSelect = ({
+export function FilterSearchSelect({
 	data,
 	onChange,
 	value,
 	entityName,
 	isLoading
-}: Props) => {
+}: Props) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
 		<Popover open={isOpen} onOpenChange={setIsOpen}>
-			<PopoverTrigger asChild>
+			<PopoverTrigger asChild className='bg-card dark:bg-card'>
 				<Button
 					variant='outline'
 					role='combobox'
 					aria-expanded={isOpen}
-					className='w-[180px] justify-between gap-0.5 opacity-70'
+					className='w-[180px] justify-between gap-0.5'
 					data-testid={`filter-by-${entityName}`}
 				>
 					{isLoading
@@ -81,4 +81,4 @@ export const FilterSearchSelect = ({
 			</PopoverContent>
 		</Popover>
 	);
-};
+}

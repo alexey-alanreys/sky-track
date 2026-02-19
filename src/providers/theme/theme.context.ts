@@ -7,4 +7,4 @@ export interface IThemeContext {
 	toggleTheme: () => void;
 }
 
-export const ThemeContext = createContext<IThemeContext | null>(null);
+export const ThemeContext = createContext<IThemeContext>({} as IThemeContext);

@@ -13,7 +13,7 @@ interface Props {
 	airlines: string[];
 }
 
-export const Filters = ({
+export function Filters({
 	fromCountry,
 	setFromCountry,
 	currentAirline,
@@ -21,9 +21,9 @@ export const Filters = ({
 	countries,
 	isLoading,
 	airlines
-}: Props) => {
+}: Props) {
 	return (
-		<div className='ml-1 grid grid-cols-2 gap-3'>
+		<div className='xs:gap-2 xs:ml-0 xs:flex xs:justify-center xs:flex-wrap xs:w-11/12 ml-1 grid grid-cols-2 gap-3'>
 			<FilterSearchSelect
 				data={countries}
 				entityName='country'
@@ -40,4 +40,4 @@ export const Filters = ({
 			/>
 		</div>
 	);
-};
+}

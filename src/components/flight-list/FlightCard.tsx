@@ -1,8 +1,7 @@
 import { useSearchParams } from 'react-router';
 
-import { cn } from '@/utils/cn';
-
 import type { TFlight } from '@/lib/trpc';
+import { cn } from '@/lib/utils';
 
 import { ProgressBar } from '../custom-ui/ProgressBar';
 
@@ -13,13 +12,12 @@ interface Props {
 	flight: TFlight;
 	index?: number;
 }
-export const FlightCard = ({ flight, index }: Props) => {
+
+export function FlightCard({ flight, index }: Props) {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const selectedFlight = searchParams.get(QUERY_PARAM_FLIGHT);
 
 	const isActive = selectedFlight === flight?.id;
-
-	/* FIXME: Heart button dont showi */
 
 	if (!flight) {
 		return null;
@@ -80,4 +78,4 @@ export const FlightCard = ({ flight, index }: Props) => {
 			</button>
 		</div>
 	);
-};
+}

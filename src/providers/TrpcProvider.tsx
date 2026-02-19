@@ -1,14 +1,25 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
-import { type PropsWithChildren, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import superjson from 'superjson';
 
 import { trpc } from '@/lib/trpc';
 
 import { BACK_END_URL } from '@/constants';
 
-export const TrpcProvider = ({ children }: PropsWithChildren) => {
-	const [queryClient] = useState(() => new QueryClient());
+export function TrpcProvider({ children }: { children: ReactNode }) {
+	const [queryClient] = useState(
+		() =>
+			new QueryClient({
+				defaultOptions: {
+					queries: {
+						refetchOnWindowFocus: false,
+						retry: false,
+						staleTime: 1000 * 60 * 2 // 2 minutes
+					}
+				}
+			})
+	);
 
 	const [client] = useState(() =>
 		trpc.createClient({
@@ -26,4 +37,4 @@ export const TrpcProvider = ({ children }: PropsWithChildren) => {
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 		</trpc.Provider>
 	);
-};
+}

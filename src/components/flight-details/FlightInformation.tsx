@@ -6,7 +6,7 @@ interface Props {
 	flight: NonNullable<TFlight>;
 }
 
-export const FlightInformation = ({ flight }: Props) => {
+export function FlightInformation({ flight }: Props) {
 	return (
 		<div className='xs:text-sm my-3.5'>
 			<div className='px-mini-element py-mini-element mb-1 rounded-tl-xl rounded-tr-xl bg-[#ddd] font-medium dark:bg-[#282828]'>
@@ -37,4 +37,4 @@ export const FlightInformation = ({ flight }: Props) => {
 			</div>
 		</div>
 	);
-};
+}

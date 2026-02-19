@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { expect } from 'vitest';
 
-import { ThemeProvider } from '@/providers/theme/themeProvider';
+import { ThemeProvider } from '@/providers/theme/ThemeProvider';
 
 import { ThemeToggle } from '../ThemeToggle';
 

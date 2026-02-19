@@ -7,7 +7,7 @@ import { SkyTrackMap } from '@/components/map/SkyTrackMap';
 
 import { trpc } from '@/lib/trpc';
 
-export const Home = () => {
+export function Home() {
 	const lastUpdateRef = useRef<Date | null>(new Date());
 
 	const [currentAirline, setCurrentAirline] = useState<string | undefined>(
@@ -26,7 +26,7 @@ export const Home = () => {
 		isFetchingNextPage
 	} = trpc.flights.getLive.useInfiniteQuery(
 		{
-			limit: 5,
+			limit: 10,
 			airlineName: currentAirline
 		},
 		{
@@ -41,7 +41,7 @@ export const Home = () => {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			refetch();
+			// refetch()
 		}, 10000); // Refetch every 10 seconds
 
 		return () => clearInterval(interval);
@@ -103,4 +103,4 @@ export const Home = () => {
 			</div>
 		</div>
 	);
-};
+}

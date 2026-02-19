@@ -25,7 +25,7 @@ interface Props {
 	activeFlight: TFlight | null | undefined;
 }
 
-export const SkyTrackMap = ({ flights, activeFlight }: Props) => {
+export function SkyTrackMap({ flights, activeFlight }: Props) {
 	const { theme } = useTheme();
 
 	const isShowRoute = useAppSelector(
@@ -168,6 +168,7 @@ export const SkyTrackMap = ({ flights, activeFlight }: Props) => {
 						type: 'FeatureCollection',
 						features: [solidFeature]
 					}}
+					lineMetrics
 				>
 					<Layer {...solidStyle(theme)} />
 				</Source>
@@ -235,4 +236,4 @@ export const SkyTrackMap = ({ flights, activeFlight }: Props) => {
 				))}
 		</Map>
 	);
-};
+}

@@ -98,11 +98,10 @@ function RefreshCw(props: RefreshCwProps) {
 	return <IconWrapper icon={IconComponent} {...props} />;
 }
 
-/* eslint-disable react-refresh/only-export-components */
 export {
 	animations,
 	RefreshCw,
 	RefreshCw as RefreshCwIcon,
-	type RefreshCwProps,
-	type RefreshCwProps as RefreshCwIconProps
+	type RefreshCwProps as RefreshCwIconProps,
+	type RefreshCwProps
 };
