@@ -9,7 +9,10 @@ import { formatICSDate } from '@/utils/format-ics-date.util';
 
 import type { TFlight } from '@/lib/trpc';
 
-import { toggleFlightRoute } from '@/store/flight-actions/flight-action.slice';
+import {
+	toggleFlightRoute,
+	toggleFollowFlight
+} from '@/store/flight-actions/flight-action.slice';
 
 import { MapPin } from '../animate-ui/icons/map-pin';
 import { SquareArrowOutUpRight } from '../animate-ui/icons/square-arrow-out-up-right';
@@ -17,13 +20,16 @@ import { QUERY_PARAM_FLIGHT } from '../flight-list/flights.constants';
 
 interface Props {
 	flight: NonNullable<TFlight>;
-	onFollow: () => void;
 }
 
-export const FlightActions = ({ onFollow, flight }: Props) => {
+export const FlightActions = ({ flight }: Props) => {
 	const dispatch = useAppDispatch();
+
 	const isShowRoute = useAppSelector(
 		(state) => state.flightActions.isShowRoute
+	);
+	const isFollowingFlight = useAppSelector(
+		(state) => state.flightActions.isFollowingFlight
 	);
 
 	const handleShare = async () => {
@@ -32,11 +38,13 @@ export const FlightActions = ({ onFollow, flight }: Props) => {
 			await navigator.clipboard.writeText(url);
 
 			toast.success('Flight link copied to clipboard', {
-				description: 'Share it with your friends! ✈️'
+				description: 'Share it with your friends! ✈️',
+				id: 'copy-flight-link-success'
 			});
 		} catch {
 			toast.error('Failed to copy flight link.', {
-				description: 'Please try again.'
+				description: 'Please try again.',
+				id: 'copy-flight-link-error'
 			});
 		}
 	};
@@ -103,8 +111,14 @@ END:VCALENDAR
 					<span>Route</span>
 				</button>
 				<button
-					onClick={onFollow}
-					className='bg-card px-mini-element py-mini-element hover:bg-card/60 flex flex-col items-center gap-2 transition-colors'
+					onClick={() => dispatch(toggleFollowFlight())}
+					className={cn(
+						'bg-card px-mini-element py-mini-element hover:bg-card/60 flex flex-col items-center gap-2 transition-colors',
+						{
+							'bg-[#ddd] hover:bg-[#ddd]/70 dark:bg-[#282828] dark:hover:bg-[#282828]/70':
+								isFollowingFlight
+						}
+					)}
 				>
 					<MapPin animateOnHover animateOnTap size={22} className='xs:size-5' />
 					<span>Follow</span>

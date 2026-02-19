@@ -87,7 +87,7 @@
 
 @theme inline {
 	--spacing-element: calc(var(--spacing) * 6);
-	--spacing-mini-element: calc(var(--spacing) * 3);
+	--spacing-mini-element: calc(var(--spacing) * 2.8);
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
@@ -129,24 +129,6 @@
 
 html {
 	@apply text-base md:text-[0.92rem];
-}
-
-.custom-scrollbar {
-	scrollbar-width: thin;
-	scrollbar-color: var(--sidebar) transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-	width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-	background-color: var(--sidebar);
-	border-radius: 3px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-	background: transparent;
 }
 
 body {

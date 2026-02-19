@@ -1,9 +1,12 @@
-import type { TRouterOutput } from 'backend/src/trpc';
 import { Dot, Plane } from 'lucide-react';
 import { useEffect, useMemo, useRef } from 'react';
 import Map, { Layer, type MapRef, Marker, Source } from 'react-map-gl/maplibre';
 
 import { useAppSelector } from '@/hooks/useAppSelector';
+
+import { getZoomByDistance } from '@/utils/get-zoom-by-distance.util';
+
+import type { TInfiniteQueryResponseFlight } from '@/types/flight.types';
 
 import type { TFlight } from '@/lib/trpc';
 
@@ -18,11 +21,20 @@ import {
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 interface Props {
-	flights: TRouterOutput['flights']['getLive'];
+	flights: TInfiniteQueryResponseFlight[];
 	activeFlight: TFlight | null | undefined;
 }
 
 export const SkyTrackMap = ({ flights, activeFlight }: Props) => {
+	const { theme } = useTheme();
+
+	const isShowRoute = useAppSelector(
+		(state) => state.flightActions.isShowRoute
+	);
+	const isFollowingFlight = useAppSelector(
+		(state) => state.flightActions.isFollowingFlight
+	);
+
 	const otherFlightCoordinates = useMemo(
 		() =>
 			flights
@@ -47,22 +59,37 @@ export const SkyTrackMap = ({ flights, activeFlight }: Props) => {
 
 	useEffect(() => {
 		if (
-			ref.current &&
-			activeFlight &&
-			activeFlightCoordinates?.lat &&
-			activeFlightCoordinates?.lng
+			!ref.current ||
+			!activeFlight ||
+			!activeFlightCoordinates?.lat ||
+			!activeFlightCoordinates?.lng
 		) {
-			ref.current.setCenter({
-				lat: activeFlightCoordinates?.lat,
-				lng: activeFlightCoordinates?.lng
-			});
-
-			ref.current.setZoom(5);
+			return;
 		}
+
+		if (!isFollowingFlight) {
+			return;
+		}
+
+		const totalDistance =
+			activeFlight.route.metrics.distanceDoneKm +
+			activeFlight.route.metrics.distanceLeftKm;
+
+		const zoom = getZoomByDistance(totalDistance);
+
+		ref.current.easeTo({
+			center: {
+				lng: activeFlightCoordinates.lng,
+				lat: activeFlightCoordinates.lat
+			},
+			zoom,
+			duration: 1200
+		});
 	}, [
 		activeFlight,
 		activeFlightCoordinates?.lat,
-		activeFlightCoordinates?.lng
+		activeFlightCoordinates?.lng,
+		isFollowingFlight
 	]);
 
 	const [solidCoords, dashedCoords] = useMemo(() => {
@@ -117,12 +144,6 @@ export const SkyTrackMap = ({ flights, activeFlight }: Props) => {
 		activeFlightCoordinates?.lng,
 		activeFlightCoordinates?.lat
 	]);
-
-	const { theme } = useTheme();
-
-	const isShowRoute = useAppSelector(
-		(state) => state.flightActions.isShowRoute
-	);
 
 	return (
 		<Map

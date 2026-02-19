@@ -40,6 +40,14 @@ export const Home = () => {
 	);
 
 	useEffect(() => {
+		const interval = setInterval(() => {
+			refetch();
+		}, 10000); // Refetch every 10 seconds
+
+		return () => clearInterval(interval);
+	}, [refetch]);
+
+	useEffect(() => {
 		if (data && data.length > 0) {
 			lastUpdateRef.current = new Date();
 		}
