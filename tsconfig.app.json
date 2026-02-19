@@ -17,11 +17,7 @@
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
 
-		"types": [
-			"vitest/globals",
-			"@testing-library/jest-dom",
-			"@testing-library/user-event"
-		],
+		"types": ["vitest/globals", "@testing-library/jest-dom"],
 
 		/* Linting */
 		"strict": true,
@@ -38,6 +34,7 @@
 	"include": [
 		"src",
 		"backend/src/data/airports/get-airport-coordinates-by-icao.ts",
-		"backend/src/data"
+		"backend/src/data",
+		"cypress"
 	]
 }

@@ -11,13 +11,19 @@ import { QUERY_PARAM_FLIGHT } from './flights.constants';
 
 interface Props {
 	flight: TFlight;
+	index?: number;
 }
-
-export const FlightCard = ({ flight }: Props) => {
+export const FlightCard = ({ flight, index }: Props) => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const selectedFlight = searchParams.get(QUERY_PARAM_FLIGHT);
 
-	const isActive = selectedFlight === flight.id;
+	const isActive = selectedFlight === flight?.id;
+
+	/* FIXME: Heart button dont showi */
+
+	if (!flight) {
+		return null;
+	}
 
 	return (
 		<div
@@ -27,6 +33,7 @@ export const FlightCard = ({ flight }: Props) => {
 					? 'bg-gradient-to-r from-rose-500 to-orange-400'
 					: 'bg-flight-card'
 			)}
+			data-testid={`flight-card-${index}`}
 		>
 			<FlightCardActions flightId={flight.id} />
 			<button
@@ -48,7 +55,7 @@ export const FlightCard = ({ flight }: Props) => {
 								className='bg-white'
 							/>
 						</div>
-						<span>{flight.id}</span>
+						<span data-testid='flight-id'>{flight.id}</span>
 					</div>
 					<div>
 						<span className='bg-card rounded-xl px-2 py-1'>{flight.icao}</span>

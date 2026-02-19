@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import type { TInfiniteQueryResponseFlight } from '@/types/flight.types';
@@ -44,10 +44,15 @@ export const FlightList = ({
 	isFetchingNextPage
 }: Props) => {
 	const { ref: loadMoreRef, inView } = useInView({ rootMargin: '100px' });
+	const lastFetchRef = useRef(0);
 
 	useEffect(() => {
 		if (inView && hasNextPage && !isFetchingNextPage) {
-			console.log('Loading more...');
+			const now = Date.now();
+			if (now - lastFetchRef.current < 4000) return;
+			lastFetchRef.current = now;
+
+			console.log('⬇️ Loading next page...');
 			fetchNextPage();
 		}
 	}, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
@@ -111,8 +116,8 @@ export const FlightList = ({
 					<SkeletonLoader count={5} className='mb-4 h-40' />
 				) : (
 					!!flights?.length &&
-					flights.map((flight) => (
-						<FlightCard key={flight?.id} flight={flight} />
+					flights.map((flight, index) => (
+						<FlightCard key={flight?.id} flight={flight} index={index} />
 					))
 				)}
 

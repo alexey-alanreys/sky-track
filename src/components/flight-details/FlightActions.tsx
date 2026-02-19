@@ -138,6 +138,7 @@ END:VCALENDAR
 				<button
 					onClick={handleAddToCalendar}
 					className='bg-card px-mini-element py-mini-element hover:bg-card/60 flex flex-col items-center gap-2 rounded-tr-2xl rounded-br-2xl transition-colors'
+					data-testid='add-to-calendar-button'
 				>
 					<Calendar size={22} className='xs:size-5' />
 					<span>Add</span>

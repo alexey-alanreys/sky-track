@@ -39,6 +39,7 @@ export const FilterSearchSelect = ({
 					role='combobox'
 					aria-expanded={isOpen}
 					className='w-[180px] justify-between gap-0.5 opacity-70'
+					data-testid={`filter-by-${entityName}`}
 				>
 					{isLoading
 						? 'Loading...'
