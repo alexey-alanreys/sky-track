@@ -16,7 +16,12 @@ export const ThemeToggle = () => {
 				variant='secondary'
 				size='icon'
 			>
-				{theme === 'dark' ? <Moon size={23} /> : <Sun size={23} />}
+				{theme === 'dark' ? (
+					<Moon size={23} data-testid='lucide-moon' />
+				) : (
+					<Sun size={23} data-testid='lucide-sun' />
+				)}
+				{/* </button> */}
 			</Button>
 		</>
 	);
