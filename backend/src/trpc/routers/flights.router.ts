@@ -14,7 +14,7 @@ export const flightsRouter = router({
 			}),
 		)
 		.query(async ({ input }) => {
-			const limit = input.limit ?? 10;
+			const limit = input.limit ?? 20;
 			const offset = input.cursor ?? 0;
 
 			const data = await aviationService.fetchLiveFlights(
@@ -27,15 +27,10 @@ export const flightsRouter = router({
 				.filter(
 					(f) => !!f.flight.iata && !!f.departure.icao && !!f.arrival.icao,
 				)
-				.map(mapAviationToFlight)
-				.filter((f) => f !== null && f.progress > 0 && f.progress < 100);
-
-			const uniqueFlights = Array.from(
-				new Map(newData.map((f) => [f?.id, f])).values(),
-			);
+				.map(mapAviationToFlight);
 
 			return {
-				items: uniqueFlights,
+				items: newData,
 				nextCursor: offset + limit,
 			};
 		}),

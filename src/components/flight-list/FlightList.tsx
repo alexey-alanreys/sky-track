@@ -1,5 +1,7 @@
-import type { TRouterOutput } from 'backend/src/trpc';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useInView } from 'react-intersection-observer';
+
+import type { TInfiniteQueryResponseFlight } from '@/types/flight.types';
 
 import { RefreshCw } from '../animate-ui/icons/refresh-cw';
 import { SkeletonLoader } from '../custom-ui/SkeletonLoader';
@@ -10,7 +12,7 @@ import { FlightCard } from './FlightCard';
 import { formatDate } from './format-date';
 
 interface Props {
-	flights: TRouterOutput['flights']['getLive'];
+	flights: TInfiniteQueryResponseFlight[];
 	refetch: () => void;
 	isRefetching: boolean;
 	isPending: boolean;
@@ -21,6 +23,10 @@ interface Props {
 
 	fromCountry: string | undefined;
 	setFromCountry: (country: string | undefined) => void;
+
+	fetchNextPage: () => void;
+	hasNextPage: boolean;
+	isFetchingNextPage: boolean;
 }
 
 export const FlightList = ({
@@ -32,9 +38,21 @@ export const FlightList = ({
 	currentAirline,
 	setCurrentAirline,
 	fromCountry,
-	setFromCountry
+	setFromCountry,
+	fetchNextPage,
+	hasNextPage,
+	isFetchingNextPage
 }: Props) => {
-	const selectCountries: string[] = useMemo(
+	const { ref: loadMoreRef, inView } = useInView({ rootMargin: '100px' });
+
+	useEffect(() => {
+		if (inView && hasNextPage && !isFetchingNextPage) {
+			console.log('Loading more...');
+			fetchNextPage();
+		}
+	}, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
+
+	const selectCountries = useMemo(
 		() =>
 			Array.from(
 				new Set(
@@ -46,7 +64,7 @@ export const FlightList = ({
 		[flights]
 	);
 
-	const selectAirlines: string[] = useMemo(
+	const selectAirlines = useMemo(
 		() =>
 			Array.from(
 				new Set(
@@ -88,7 +106,7 @@ export const FlightList = ({
 				</div>
 			)}
 
-			<div className='custom-scrollbar max-h-[calc(100vh-4rem)] min-h-[calc(100vh-4rem)] space-y-4 overflow-x-hidden overflow-y-auto pt-3 pb-8'>
+			<div className='max-h-[calc(100vh-4rem)] min-h-[calc(100vh-4rem)] space-y-4 overflow-x-hidden overflow-y-auto pt-3 pb-8'>
 				{isPending ? (
 					<SkeletonLoader count={5} className='mb-4 h-40' />
 				) : (
@@ -97,6 +115,12 @@ export const FlightList = ({
 						<FlightCard key={flight?.id} flight={flight} />
 					))
 				)}
+
+				{isFetchingNextPage && (
+					<SkeletonLoader count={5} className='mb-4 h-40' />
+				)}
+
+				<div ref={loadMoreRef} />
 			</div>
 		</div>
 	);

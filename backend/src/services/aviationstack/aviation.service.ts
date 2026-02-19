@@ -13,19 +13,19 @@ dotenv.config();
 
 class AviationService {
 	private apiUrl: string;
-	private apiKey: string;
+	private token: string;
 	private flightsCache = new SimpleCache<IFetchFlightsResponse>(120_000); // TTL 1 min.
 	private countriesCache = new SimpleCache<IFetchCountriesResponse>(600_000); // TTL 10 min.
 	private airlinesCache = new SimpleCache<IFetchAirlinesResponse>(600_000); // TTL 10 min.
 
 	constructor() {
 		this.apiUrl = 'https://api.aviationstack.com/v1';
-		this.apiKey = process.env.AVIATION_API_KEY!;
+		this.token = process.env.AVIATIONSTACK_API_TOKEN!;
 	}
 
 	private getUrl(path: string) {
 		const url = new URL(`${this.apiUrl}/${path}`);
-		url.searchParams.append('access_key', this.apiKey);
+		url.searchParams.append('access_key', this.token);
 		return url;
 	}
 

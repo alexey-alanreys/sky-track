@@ -15,21 +15,29 @@ export const Home = () => {
 	);
 	const [fromCountry, setFromCountry] = useState<string | undefined>(undefined);
 
-	const { data, isLoading, error, refetch, isRefetching } =
-		trpc.flights.getLive.useInfiniteQuery(
-			{
-				limit: 20,
-				airlineName: currentAirline
+	const {
+		data,
+		isLoading,
+		error,
+		refetch,
+		isRefetching,
+		fetchNextPage,
+		hasNextPage,
+		isFetchingNextPage
+	} = trpc.flights.getLive.useInfiniteQuery(
+		{
+			limit: 5,
+			airlineName: currentAirline
+		},
+		{
+			getNextPageParam: (lastPage) => {
+				return lastPage.nextCursor;
 			},
-			{
-				getNextPageParam: (lastPage) => {
-					return lastPage.nextCursor;
-				},
-				select: (data) => {
-					return data.pages.flatMap((page) => page.items) ?? [];
-				}
+			select: (data) => {
+				return data.pages.flatMap((page) => page.items) ?? [];
 			}
-		);
+		}
+	);
 
 	useEffect(() => {
 		if (data && data.length > 0) {
@@ -77,6 +85,9 @@ export const Home = () => {
 				setCurrentAirline={setCurrentAirline}
 				fromCountry={fromCountry}
 				setFromCountry={setFromCountry}
+				fetchNextPage={fetchNextPage}
+				hasNextPage={hasNextPage}
+				isFetchingNextPage={isFetchingNextPage}
 			/>
 			{activeFlight && <FlightDetails flight={activeFlight} />}
 			<div className='absolute inset-0 z-0'>
