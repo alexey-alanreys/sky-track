@@ -8,15 +8,28 @@ import { SkyTrackMap } from '@/components/map/SkyTrackMap';
 import { trpc } from '@/lib/trpc';
 
 export const Home = () => {
-	const lastUpdateRef = useRef<Date>(new Date());
+	const lastUpdateRef = useRef<Date | null>(new Date());
 
-	const [currentAirline, setCurrentAirline] = useState<string | undefined>();
-	const [fromCountry, setFromCountry] = useState<string | undefined>();
+	const [currentAirline, setCurrentAirline] = useState<string | undefined>(
+		undefined
+	);
+	const [fromCountry, setFromCountry] = useState<string | undefined>(undefined);
 
 	const { data, isLoading, error, refetch, isRefetching } =
-		trpc.flights.getLive.useQuery({
-			limit: 20
-		});
+		trpc.flights.getLive.useInfiniteQuery(
+			{
+				limit: 20,
+				airlineName: currentAirline
+			},
+			{
+				getNextPageParam: (lastPage) => {
+					return lastPage.nextCursor;
+				},
+				select: (data) => {
+					return data.pages.flatMap((page) => page.items) ?? [];
+				}
+			}
+		);
 
 	useEffect(() => {
 		if (data && data.length > 0) {

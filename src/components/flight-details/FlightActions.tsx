@@ -1,10 +1,11 @@
-import { MoreHorizontal, Route } from 'lucide-react';
+import { Calendar, Route } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 
 import { cn } from '@/utils/cn';
+import { formatICSDate } from '@/utils/format-ics-date.util';
 
 import type { TFlight } from '@/lib/trpc';
 
@@ -16,12 +17,10 @@ import { QUERY_PARAM_FLIGHT } from '../flight-list/flights.constants';
 
 interface Props {
 	flight: NonNullable<TFlight>;
-
 	onFollow: () => void;
-	onMore: () => void;
 }
 
-export const FlightActions = ({ onFollow, onMore, flight }: Props) => {
+export const FlightActions = ({ onFollow, flight }: Props) => {
 	const dispatch = useAppDispatch();
 	const isShowRoute = useAppSelector(
 		(state) => state.flightActions.isShowRoute
@@ -40,6 +39,51 @@ export const FlightActions = ({ onFollow, onMore, flight }: Props) => {
 				description: 'Please try again.'
 			});
 		}
+	};
+
+	const handleAddToCalendar = () => {
+		if (!flight) {
+			toast.error('Flight time is not available.');
+			return;
+		}
+
+		const schedule = flight.schedule;
+
+		const start = new Date(schedule.departure.scheduled.iso);
+		const end = new Date(schedule.arrival.scheduled.iso);
+
+		const dtStart = formatICSDate(start);
+		const dtEnd = formatICSDate(end);
+
+		const icsContent = `
+BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+SUMMARY:Flight ${flight.from.code} → ${flight.to.code} (${flight.id})
+DTSTART:${dtStart}
+DTEND:${dtEnd}
+DESCRIPTION:Airline: ${flight.airline.name}, Flight ID: ${flight.id}
+LOCATION:${flight.from.city} - ${flight.to.city}
+END:VEVENT
+END:VCALENDAR
+`.trim();
+
+		const blob = new Blob([icsContent], {
+			type: 'text/calendar;charset=utf-8'
+		});
+		const url = URL.createObjectURL(blob);
+
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = `flight-${flight.id}.ics`;
+		link.click();
+
+		URL.revokeObjectURL(url);
+
+		toast.success('File added to downloads', {
+			description: 'Open it with your calendar app! 📅'
+		});
 	};
 
 	return (
@@ -78,11 +122,11 @@ export const FlightActions = ({ onFollow, onMore, flight }: Props) => {
 					<span>Share</span>
 				</button>
 				<button
-					onClick={onMore}
+					onClick={handleAddToCalendar}
 					className='bg-card px-mini-element py-mini-element hover:bg-card/60 flex flex-col items-center gap-2 rounded-tr-2xl rounded-br-2xl transition-colors'
 				>
-					<MoreHorizontal size={22} className='xs:size-5' />
-					<span>More</span>
+					<Calendar size={22} className='xs:size-5' />
+					<span>Add</span>
 				</button>
 			</div>
 		</div>

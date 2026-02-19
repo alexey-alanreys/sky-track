@@ -40,11 +40,7 @@ export const FlightDetails = ({ flight }: Props) => {
 
 					<FlightInformation flight={flight} />
 
-					<FlightActions
-						flight={flight}
-						onFollow={() => {}}
-						onMore={() => {}}
-					/>
+					<FlightActions flight={flight} onFollow={() => {}} />
 				</div>
 			</m.aside>
 		</AnimatePresence>
